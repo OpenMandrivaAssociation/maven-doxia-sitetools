@@ -33,7 +33,7 @@
 
 Name:           %{parent}-%{subproj}
 Version:        1.1.3
-Release:        3
+Release:        5
 Summary:        Doxia content generation framework
 License:        ASL 2.0
 Group:          Development/Java
