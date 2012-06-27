@@ -96,7 +96,7 @@ Requires:       plexus-velocity
 Requires:       velocity
 Requires:       %{_javadir}/javamail/mail.jar
 
-Requires:       java >= 1:1.7.0
+Requires:       java >= 1.6.0
 Requires:       jpackage-utils
 
 BuildArch:      noarch
