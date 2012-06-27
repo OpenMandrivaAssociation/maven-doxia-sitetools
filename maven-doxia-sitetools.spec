@@ -32,27 +32,26 @@
 %global subproj sitetools
 
 Name:           %{parent}-%{subproj}
-Version:        1.1.3
-Release:        5
+Version:        1.2
+Release:        3
 Summary:        Doxia content generation framework
 License:        ASL 2.0
 Group:          Development/Java
 URL:            http://maven.apache.org/doxia/
 
-#  svn export http://svn.apache.org/repos/asf/maven/doxia/doxia-sitetools/tags/doxia-sitetools-1.1.3/ \
-#  maven-doxia-sitetools-1.1.3
-# tar czf maven-doxia-sitetools-1.1.3.tar.gz maven-doxia-sitetools-1.1.3
-Source0:        %{name}-%{version}.tar.gz
+Source0:        http://repo2.maven.org/maven2/org/apache/maven/doxia/doxia-sitetools/%{version}/doxia-%{subproj}-%{version}-source-release.zip
 
 # Point it at the correct plexus-container-default
-Source1:    maven-doxia-depmap.xml
+Source1:        maven-doxia-depmap.xml
 
-Patch0:         %{name}-clirr.patch
-Patch1:         %{name}-disablehtmlunit.patch
+Patch0:         0001-Remove-clirr-dependency.patch
+Patch1:         0002-Remove-htmlunit-dependency.patch
+Patch2:         0003-Migration-to-component-metadata.patch
 
-BuildRequires:  itext >= 2.1.7
-BuildRequires:  jpackage-utils >= 0:1.7.2
-BuildRequires:  maven2
+BuildRequires:  java-devel >= 1.6.0
+BuildRequires:  itext
+BuildRequires:  jpackage-utils
+BuildRequires:  maven
 BuildRequires:  maven-compiler-plugin
 BuildRequires:  maven-install-plugin
 BuildRequires:  maven-jar-plugin
@@ -63,9 +62,7 @@ BuildRequires:  maven-surefire-plugin
 BuildRequires:  maven-shared-reporting-impl
 BuildRequires:  maven-surefire-provider-junit
 BuildRequires:  maven-doxia
-BuildRequires:  plexus-maven-plugin >= 0:1.2-2
-BuildRequires:  modello-maven-plugin >= 0:1.0-0.a8.3
-BuildRequires:  plexus-xmlrpc >= 0:1.0-0.b4.3
+BuildRequires:  modello-maven-plugin
 BuildRequires:  classworlds
 BuildRequires:  apache-commons-collections
 BuildRequires:  apache-commons-configuration
@@ -76,10 +73,12 @@ BuildRequires:  jakarta-oro
 BuildRequires:  plexus-container-default
 BuildRequires:  plexus-containers-container-default
 BuildRequires:  plexus-containers-component-javadoc
+BuildRequires:  plexus-containers-component-metadata
 BuildRequires:  plexus-i18n
-BuildRequires:  plexus-utils >= 1.5.7
+BuildRequires:  plexus-utils
 BuildRequires:  plexus-velocity
 BuildRequires:  velocity
+BuildRequires:  %{_javadir}/javamail/mail.jar
 
 Requires:       classworlds
 Requires:       apache-commons-collections
@@ -92,14 +91,13 @@ Requires:       jakarta-oro
 Requires:       plexus-container-default
 Requires:       plexus-containers-container-default
 Requires:       plexus-i18n
-Requires:       plexus-utils >= 1.5.7
+Requires:       plexus-utils
 Requires:       plexus-velocity
 Requires:       velocity
+Requires:       %{_javadir}/javamail/mail.jar
 
-Requires:       java >= 0:1.6.0
-Requires:       jpackage-utils >= 0:1.7.2
-Requires(post):   jpackage-utils >= 0:1.7.2
-Requires(postun): jpackage-utils >= 0:1.7.2
+Requires:       java >= 1:1.7.0
+Requires:       jpackage-utils
 
 BuildArch:      noarch
 
@@ -119,72 +117,57 @@ Requires:       jpackage-utils
 API documentation for %{name}.
 
 %prep
-%setup -q
+%setup -q -n doxia-%{subproj}-%{version}
 
 %patch0 -p1
 
 # Disable tests that need htmlunit, until we get it in Fedora
 %patch1 -p1
-rm -rf doxia-site-renderer/src/test/java/org/apache/maven/doxia/siterenderer/
 
-# use new taglet name
-sed -i 's:plexus-javadoc:plexus-component-javadoc:' pom.xml
+%patch2 -p1
+
 
 %build
 
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mkdir -p $MAVEN_REPO_LOCAL
-
-mvn-jpp \
+# tests can't run because of missing deps
+mvn-rpmbuild \
       -e \
-      -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-      -Dmaven.test.failure.ignore=true \
+      -Dmaven.local.depmap.file=%{SOURCE1} \
       -Dmaven.test.skip=true \
-      -Dmaven2.jpp.depmap.file=%{SOURCE1} \
       install javadoc:aggregate
 
-
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
-
 %install
-rm -rf $RPM_BUILD_ROOT
 
 # jars/poms
-install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
+install -d -m 755 %{buildroot}%{_mavenpomdir}
 
-install -m 644 -p pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-sitetools.pom
-install -m 644 -p doxia-decoration-model/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-decoration-model.pom
-install -m 644 -p doxia-site-renderer/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-site-renderer.pom
-install -m 644 -p doxia-doc-renderer/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{parent}-doc-renderer.pom
+install -m 644 -p pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-sitetools.pom
+install -m 644 -p doxia-decoration-model/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-decoration-model.pom
+install -m 644 -p doxia-site-renderer/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-site-renderer.pom
+install -m 644 -p doxia-doc-renderer/pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{parent}-doc-renderer.pom
 
-%add_to_maven_depmap org.apache.maven.doxia doxia-sitetools %{version} JPP/%{parent} sitetools
-%add_to_maven_depmap org.apache.maven.doxia doxia-decoration-model %{version} JPP/%{parent} decoration-model
-%add_to_maven_depmap org.apache.maven.doxia doxia-site-renderer %{version} JPP/%{parent} site-renderer
-%add_to_maven_depmap org.apache.maven.doxia doxia-doc-renderer %{version} JPP/%{parent} doc-renderer
-
-install -dm 755 $RPM_BUILD_ROOT%{_javadir}/%{parent}
+install -dm 755 %{buildroot}%{_javadir}/%{parent}
 
 install -m 644 -p doxia-decoration-model/target/doxia-decoration-model-%{version}.jar \
-	$RPM_BUILD_ROOT%{_javadir}/%{parent}/decoration-model.jar
+	%{buildroot}%{_javadir}/%{parent}/decoration-model.jar
 install -m 644 -p doxia-site-renderer/target/doxia-site-renderer-%{version}.jar \
-	$RPM_BUILD_ROOT%{_javadir}/%{parent}/site-renderer.jar
+	%{buildroot}%{_javadir}/%{parent}/site-renderer.jar
 install -m 644 -p doxia-doc-renderer/target/doxia-doc-renderer-%{version}.jar \
-	$RPM_BUILD_ROOT%{_javadir}/%{parent}/doc-renderer.jar
+	%{buildroot}%{_javadir}/%{parent}/doc-renderer.jar
 
-install -dm 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
+install -dm 755 %{buildroot}%{_javadocdir}/%{name}
+cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}
+
+%add_maven_depmap JPP.%{parent}-sitetools.pom
+%add_maven_depmap JPP.%{parent}-decoration-model.pom %{parent}/decoration-model.jar
+%add_maven_depmap JPP.%{parent}-site-renderer.pom %{parent}/site-renderer.jar
+%add_maven_depmap JPP.%{parent}-doc-renderer.pom %{parent}/doc-renderer.jar
 
 %files
-%defattr(-,root,root,-)
-%{_javadir}/%{parent}/*
+%{_javadir}/%{parent}/*.jar
 %{_mavenpomdir}/*
 %{_mavendepmapfragdir}/%{name}
 
 %files javadoc
-%defattr(-,root,root,-)
-%doc %{_javadocdir}/*
+%doc %{_javadocdir}/%{name}
 
