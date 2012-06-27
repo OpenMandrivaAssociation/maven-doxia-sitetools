@@ -33,7 +33,7 @@
 
 Name:           %{parent}-%{subproj}
 Version:        1.2
-Release:        3
+Release:        1
 Summary:        Doxia content generation framework
 License:        ASL 2.0
 Group:          Development/Java
@@ -78,7 +78,7 @@ BuildRequires:  plexus-i18n
 BuildRequires:  plexus-utils
 BuildRequires:  plexus-velocity
 BuildRequires:  velocity
-BuildRequires:  %{_javadir}/javamail/mail.jar
+BuildRequires:  javamail
 
 Requires:       classworlds
 Requires:       apache-commons-collections
