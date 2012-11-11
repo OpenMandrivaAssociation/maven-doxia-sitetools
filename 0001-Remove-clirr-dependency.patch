@@ -1,0 +1,65 @@
+From 75ed919d4653de4479bbebdf85fd7176e44d689f Mon Sep 17 00:00:00 2001
+From: Stanislav Ochotnicky <sochotnicky@redhat.com>
+Date: Fri, 6 May 2011 14:20:37 +0200
+Subject: [PATCH 1/2] Remove clirr dependency
+
+---
+ pom.xml |   29 +----------------------------
+ 1 files changed, 1 insertions(+), 28 deletions(-)
+
+diff --git a/pom.xml b/pom.xml
+index f7cc92d..9b68bf5 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -247,14 +247,6 @@ under the License.
+             <tagBase>https://svn.apache.org/repos/asf/maven/doxia/doxia-sitetools/tags</tagBase>
+           </configuration>
+         </plugin>
+-        <!-- TODO need to upgrade to last version or Maven parent version -->
+-        <plugin>
+-          <groupId>org.codehaus.mojo</groupId>
+-          <artifactId>clirr-maven-plugin</artifactId>
+-          <configuration>
+-            <comparisonVersion>1.1</comparisonVersion>
+-          </configuration>
+-        </plugin>
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-javadoc-plugin</artifactId>
+@@ -283,25 +275,6 @@ under the License.
+         </plugin>
+       </plugins>
+     </pluginManagement>
+-    <plugins>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>clirr-maven-plugin</artifactId>
+-        <executions>
+-          <execution>
+-            <phase>verify</phase>
+-            <goals>
+-              <goal>check</goal>
+-            </goals>
+-            <configuration>
+-              <excludes>
+-                <exclude>org/apache/maven/doxia/site/decoration/*</exclude>
+-              </excludes>
+-            </configuration>
+-          </execution>
+-        </executions>
+-      </plugin>
+-    </plugins>
+   </build>
+ 
+   <profiles>
+@@ -423,6 +396,6 @@ under the License.
+           </plugin>
+         </plugins>
+       </build>
+-    </profile>    
++    </profile>
+   </profiles>
+ </project>
+-- 
+1.7.4.4
+
