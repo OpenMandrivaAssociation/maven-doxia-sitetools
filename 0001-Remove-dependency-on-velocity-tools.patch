@@ -1,4 +1,4 @@
-From fee413e27bf8d8c85a7e03ba6f92621ad6455cab Mon Sep 17 00:00:00 2001
+From 1ed37eb1ef72f067895765da2389408dec8dd49b Mon Sep 17 00:00:00 2001
 From: Michal Srb <msrb@redhat.com>
 Date: Mon, 29 Apr 2013 11:02:31 +0200
 Subject: [PATCH] Remove dependency on velocity-tools
@@ -8,20 +8,20 @@ Subject: [PATCH] Remove dependency on velocity-tools
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/doxia-site-renderer/src/main/java/org/apache/maven/doxia/siterenderer/DefaultSiteRenderer.java b/doxia-site-renderer/src/main/java/org/apache/maven/doxia/siterenderer/DefaultSiteRenderer.java
-index d57d308..a8bb759 100644
+index e88029d..8f1fc06 100644
 --- a/doxia-site-renderer/src/main/java/org/apache/maven/doxia/siterenderer/DefaultSiteRenderer.java
 +++ b/doxia-site-renderer/src/main/java/org/apache/maven/doxia/siterenderer/DefaultSiteRenderer.java
-@@ -70,8 +70,8 @@ import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
+@@ -65,8 +65,8 @@ import org.apache.maven.doxia.parser.module.ParserModuleNotFoundException;
+ import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
  import org.apache.maven.doxia.util.XmlValidator;
- 
  import org.apache.velocity.Template;
 +import org.apache.velocity.VelocityContext;
  import org.apache.velocity.context.Context;
 -import org.apache.velocity.tools.ToolManager;
- 
  import org.codehaus.plexus.component.annotations.Component;
  import org.codehaus.plexus.component.annotations.Requirement;
-@@ -432,8 +432,7 @@ public class DefaultSiteRenderer
+ import org.codehaus.plexus.i18n.I18N;
+@@ -424,8 +424,7 @@ public class DefaultSiteRenderer
  
      private Context createVelocityContext( SiteRendererSink sink, SiteRenderingContext siteRenderingContext )
      {
@@ -32,5 +32,5 @@ index d57d308..a8bb759 100644
          // ----------------------------------------------------------------------
          // Data objects
 -- 
-1.8.1.4
+1.9.3
 

@@ -1,63 +1,40 @@
 %{?_javapackages_macros:%_javapackages_macros}
-# Copyright (c) 2000-2005, JPackage Project
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
-#
-# 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright
-#    notice, this list of conditions and the following disclaimer in the
-#    documentation and/or other materials provided with the
-#    distribution.
-# 3. Neither the name of the JPackage Project nor the names of its
-#    contributors may be used to endorse or promote products derived
-#    from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-
 %global parent maven-doxia
 %global subproj sitetools
 
 Name:           %{parent}-%{subproj}
-Version:        1.4
-Release:        2.1%{?dist}
+Version:        1.6
+Release:        1%{?dist}
 Summary:        Doxia content generation framework
 License:        ASL 2.0
-
 URL:            http://maven.apache.org/doxia/
+BuildArch:      noarch
 
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/doxia/doxia-sitetools/%{version}/doxia-%{subproj}-%{version}-source-release.zip
-
 
 Patch1:         0001-Remove-dependency-on-velocity-tools.patch
 
 BuildRequires:  maven-local
-BuildRequires:  java-devel
 BuildRequires:  mvn(commons-collections:commons-collections)
+BuildRequires:  mvn(commons-io:commons-io)
+BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-core)
+BuildRequires:  mvn(org.apache.maven.doxia:doxia-decoration-model)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-logging-api)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-module-apt)
+BuildRequires:  mvn(org.apache.maven.doxia:doxia-module-confluence)
+BuildRequires:  mvn(org.apache.maven.doxia:doxia-module-docbook-simple)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-module-fml)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-module-fo)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-module-xdoc)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-module-xhtml)
 BuildRequires:  mvn(org.apache.maven.doxia:doxia-sink-api)
-BuildRequires:  mvn(org.apache.maven:maven-parent)
+BuildRequires:  mvn(org.apache.maven.doxia:doxia-sitetools:pom:)
+BuildRequires:  mvn(org.apache.maven:maven-parent:pom:)
 BuildRequires:  mvn(org.apache.velocity:velocity)
+BuildRequires:  mvn(org.codehaus.modello:modello-maven-plugin)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-component-annotations)
+BuildRequires:  mvn(org.codehaus.plexus:plexus-component-metadata)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-container-default)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-i18n)
 BuildRequires:  mvn(org.codehaus.plexus:plexus-utils)
@@ -65,7 +42,6 @@ BuildRequires:  mvn(org.codehaus.plexus:plexus-velocity)
 BuildRequires:  mvn(xalan:xalan)
 BuildRequires:  mvn(xml-apis:xml-apis)
 
-BuildArch:      noarch
 
 %description
 Doxia is a content generation framework which aims to provide its
@@ -76,7 +52,6 @@ wikis and content management systems.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-
 
 %description javadoc
 API documentation for %{name}.
@@ -118,10 +93,26 @@ rm -rf $(find -type d -name itext)
 
 
 %files -f .mfiles
+%dir %{_javadir}/%{name}
 
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Thu Jul 17 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-1
+- Update to upstream version 1.6
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.4-5
+- Use Requires: java-headless rebuild (#1067528)
+
+* Wed Feb 19 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.4-4
+- Fix unowned directory
+
+* Tue Oct  1 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.4-3
+- Add missing build dependencies
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -204,3 +195,4 @@ rm -rf $(find -type d -name itext)
 
 * Fri Jun 20 2000 Deepak Bhole <dbhole@redhat.com> 1.0-0.1.a10.0jpp.1
 - Initial build
+
