@@ -7,7 +7,7 @@ Version:        1.6
 Release:        1%{?dist}
 Summary:        Doxia content generation framework
 License:        ASL 2.0
-URL:            http://maven.apache.org/doxia/
+URL:            https://maven.apache.org/doxia/
 BuildArch:      noarch
 
 Source0:        http://repo2.maven.org/maven2/org/apache/maven/doxia/doxia-sitetools/%{version}/doxia-%{subproj}-%{version}-source-release.zip
